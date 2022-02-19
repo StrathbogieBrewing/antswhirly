@@ -18,11 +18,16 @@
 //                  +----+
 
 #define SSR (11)
+#define PEDAL_1 (12)
+#define PEDAL_2 (13)
 
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(SSR, OUTPUT);
+
+  pinMode(PEDAL_1, INPUT_PULLUP);
+  pinMode(PEDAL_2, INPUT_PULLUP);
 
   // digitalWrite(SSR, HIGH);
 
@@ -34,17 +39,28 @@ void loop() {
   static int counter = 0;
   counter++;
 
-  delay(10); // 20 ms mains period
+  delay(20); // 20 ms mains period
 
-  int pot_one = analogRead(A0) >> 6;
-  int pot_two = analogRead(A1) >> 6;
+  int pot_one = (analogRead(A0) >> 6);
+  int pot_two = (analogRead(A1) >> 6);
+
+  int drive = 0;
+
+  if(digitalRead(PEDAL_1) == LOW){
+    drive = pot_one;
+  }
+
+  if(digitalRead(PEDAL_2) == LOW){
+    drive = pot_two;
+  }
+
   // print out the value you read:
   if ((counter & 0x03F) == 32) {
     Serial.println(pot_one);
     Serial.println(pot_two);
   }
 
-  if ((counter & 0x0F) <= pot_one) {
+  if ((counter & 0x0F) < drive) {
     digitalWrite(SSR, HIGH);
   } else {
     digitalWrite(SSR, LOW);
