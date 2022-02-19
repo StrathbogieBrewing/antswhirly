@@ -41,8 +41,8 @@ void loop() {
 
   delay(20); // 20 ms mains period
 
-  int pot_one = (analogRead(A0) >> 6);
-  int pot_two = (analogRead(A1) >> 6);
+  int pot_one = (analogRead(A0) >> 7)+9;
+  int pot_two = (analogRead(A1) >> 7)+9;
 
   int drive = 0;
 
@@ -56,8 +56,8 @@ void loop() {
 
   // print out the value you read:
   if ((counter & 0x03F) == 32) {
-    Serial.println(pot_one);
-    Serial.println(pot_two);
+    // Serial.println(pot_one);
+    Serial.println(drive);
   }
 
   if ((counter & 0x0F) < drive) {
