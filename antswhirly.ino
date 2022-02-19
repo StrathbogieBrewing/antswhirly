@@ -18,8 +18,8 @@
 //                  +----+
 
 #define SSR (11)
-#define PEDAL_1 (12)
-#define PEDAL_2 (13)
+#define PEDAL_1 (13)
+#define PEDAL_2 (12)
 
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
@@ -41,16 +41,16 @@ void loop() {
 
   delay(20); // 20 ms mains period
 
-  int pot_one = (analogRead(A0) >> 7)+9;
-  int pot_two = (analogRead(A1) >> 7)+9;
+  int pot_one = (analogRead(A0) >> 7) + 10;
+  int pot_two = (analogRead(A1) >> 7) + 10;
 
   int drive = 0;
 
-  if(digitalRead(PEDAL_1) == LOW){
+  if (digitalRead(PEDAL_1) == LOW) {
     drive = pot_one;
   }
 
-  if(digitalRead(PEDAL_2) == LOW){
+  if (digitalRead(PEDAL_2) == LOW) {
     drive = pot_two;
   }
 
