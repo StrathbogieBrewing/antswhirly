@@ -21,7 +21,8 @@
 #define PEDAL_1 (13)
 #define PEDAL_2 (12)
 
-void setup() {
+void setup()
+{
   // initialize digital pin LED_BUILTIN as an output.
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(SSR, OUTPUT);
@@ -35,40 +36,81 @@ void setup() {
 }
 
 // the loop function runs over and over again forever
-void loop() {
+void loop()
+{
+  static int debounce = 0;
   static int counter = 0;
-  counter++;
+  static bool speed = 0;
+  static bool run = 0;
 
+  counter++;
   delay(20); // 20 ms mains period
 
   int pot_one = (analogRead(A0) >> 7) + 10;
   int pot_two = (analogRead(A1) >> 7) + 10;
 
-  int drive = 0;
-
-  if (digitalRead(PEDAL_1) == LOW) {
-    drive = pot_one;
+  if (digitalRead(PEDAL_1) == LOW)
+  {
+    debounce++;
+  }
+  else if (digitalRead(PEDAL_2) == LOW)
+  {
+    debounce--;
+  }
+  else
+  {
+    debounce = 0;
   }
 
-  if (digitalRead(PEDAL_2) == LOW) {
-    drive = pot_two;
+  if (debounce == 3)
+  {
+    speed = !speed;
+    if (debounce >= 4)
+      debounce = 4;
+  }
+
+  if (debounce == -3)
+  {
+    run = !run;
+    if (debounce <= -4)
+      debounce = -4;
+  }
+
+  int drive = 0;
+  if (run)
+  {
+    if (speed)
+    {
+      drive = pot_one;
+    }
+    else
+    {
+      drive = pot_two;
+    }
   }
 
   // print out the value you read:
-  if ((counter & 0x03F) == 32) {
+  if ((counter & 0x3F) == 32)
+  {
     // Serial.println(pot_one);
     Serial.println(drive);
   }
 
-  if ((counter & 0x0F) < drive) {
+  if ((counter & 0x0F) < drive)
+  {
     digitalWrite(SSR, HIGH);
-  } else {
+  }
+  else
+  {
     digitalWrite(SSR, LOW);
   }
 
-  if ((counter & 0x03F) < 32) {
+  if ((counter & 0x03F) < 32)
+  {
     digitalWrite(LED_BUILTIN, HIGH);
-  } else {
+  }
+  else
+  {
     digitalWrite(LED_BUILTIN, LOW);
   }
 }
